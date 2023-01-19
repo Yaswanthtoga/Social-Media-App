@@ -5,6 +5,8 @@ import Profile from "./pages/profile/Profile.jsx";
 import Navbar from "./components/navbar/Navbar.jsx"
 import Rightbar from "./components/rightbar/Rightbar.jsx"
 import Leftbar from "./components/leftbar/Leftbar.jsx"
+import "./style.scss";
+
 
 import {
   createBrowserRouter,
@@ -12,11 +14,14 @@ import {
   Outlet,
   RouterProvider,
 } from "react-router-dom";
+import { useContext } from "react";
+import { DarkModeContext } from "./context/darkModeContext.js";
+import { AuthContext } from "./context/authContext.js";
 
 
 const App = () => {
 
-  const currentUser = false;
+  const { currentUser } = useContext(AuthContext);
   const ProtectedRoute = ({children})=>{
     if(!currentUser){
       return <Navigate to="/login"/>
@@ -25,12 +30,16 @@ const App = () => {
   }
 
   const Layout = ()=>{
+    const {darkMode} = useContext(DarkModeContext);
+
     return (
-      <div>
+      <div className={`theme-${darkMode? "dark":"light" }`}>
         <Navbar/>
         <div style={{display:"flex"}}>
           <Leftbar/>
-          <Outlet/>
+          <div style={{flex:6}}>
+           <Outlet/>
+          </div>
           <Rightbar/>
         </div>
       </div>
